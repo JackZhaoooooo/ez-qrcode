@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "EZ QR Code",
+  "version": "1.0.0",
+  "description": "一个简单的二维码生成和管理工具",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "EZ QR Code"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' http://localhost:5173; object-src 'self'"
+  }
+}

@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 540px;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--semi-color-fill-2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--semi-color-fill-1);
+}
+
+[theme-mode="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--semi-color-fill-1);
+}
+
+[theme-mode="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--semi-color-fill-0);
+}
+
+/* 按钮样式优化 */
+.semi-button-tertiary {
+  padding: 4px !important;
+}
+
+.semi-button-tertiary:hover {
+  background-color: #f5f5f5 !important;
+}
+
+/* TextArea清除按钮位置调整 */
+.semi-input-textarea-wrapper .semi-input-clearbtn {
+  right: 16px !important;
+}
+
+/* 表格样式优化 */
+.semi-table-thead {
+  display: none !important;
+}
+
+.semi-table-tbody .semi-table-td {
+  padding: 6px 8px !important;
+}
+
+/* 深色模式样式 */
+[theme-mode="dark"] .bg-gray-50 {
+  background-color: var(--semi-color-bg-1);
+}
+
+[theme-mode="dark"] .text-gray-500 {
+  color: var(--semi-color-text-2);
+}
+
+[theme-mode="dark"] .semi-table-tbody .semi-table-row:hover {
+  background-color: var(--semi-color-fill-1) !important;
+}
+
+[theme-mode="dark"] .semi-button-tertiary:hover {
+  background-color: var(--semi-color-fill-1) !important;
+}
+
+[theme-mode="dark"] .semi-tabs-content {
+  background-color: var(--semi-color-bg-0);
+}
+
+[theme-mode="dark"] .semi-table-tbody .semi-table-td {
+  border-bottom-color: var(--semi-color-border) !important;
+}
