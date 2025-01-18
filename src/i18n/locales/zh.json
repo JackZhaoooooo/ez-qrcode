@@ -1,0 +1,23 @@
+{
+  "qrcode": {
+    "generate": "生成二维码",
+    "decode": "解析二维码",
+    "favorite": "收藏",
+    "input": "请输入内容",
+    "generate_btn": "生成",
+    "decode_btn": "解析",
+    "download": "下载",
+    "copy": "复制",
+    "favorite_add": "更新",
+    "favorite_remove": "从收藏中移除",
+    "upload": "请上传正确二维码图片",
+    "drag": "拖拽图片到这里",
+    "or": "或",
+    "click": "点击上传",
+    "no_favorites": "暂无收藏",
+    "copied": "已复制到剪贴板",
+    "theme": "主题",
+    "language": "语言",
+    "filter": "输入名称或链接进行搜索"
+  }
+}

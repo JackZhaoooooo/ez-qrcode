@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Toast, TextArea } from '@douyinfe/semi-ui'
 import { QRCodeSVG } from 'qrcode.react'
 import { IconSave, IconDownload } from '@douyinfe/semi-icons'
+import { useTranslation } from 'react-i18next'
 import FavoriteList from './FavoriteList'
 import ReactDOMServer from 'react-dom/server'
 
@@ -9,6 +10,7 @@ const QRCodeGenerator: React.FC = () => {
 	const [name, setName] = useState('')
 	const [url, setUrl] = useState('')
 	const [refreshKey, setRefreshKey] = useState(0)
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		// 获取当前页面的标题和URL
@@ -21,7 +23,7 @@ const QRCodeGenerator: React.FC = () => {
 
 	const handleSave = () => {
 		if (!name || !url) {
-			Toast.error('名称和链接不能为空')
+			Toast.error(t('qrcode.input'))
 			return
 		}
 
@@ -34,7 +36,7 @@ const QRCodeGenerator: React.FC = () => {
 				},
 				() => {
 					setRefreshKey((prev) => prev + 1)
-					Toast.success('保存成功')
+					Toast.success(t('qrcode.copied'))
 				},
 			)
 		})
@@ -42,7 +44,7 @@ const QRCodeGenerator: React.FC = () => {
 
 	const handleDownload = () => {
 		if (!url) {
-			Toast.error('链接不能为空')
+			Toast.error(t('qrcode.input'))
 			return
 		}
 
@@ -78,7 +80,7 @@ const QRCodeGenerator: React.FC = () => {
 				link.click()
 
 				document.body.removeChild(tempDiv)
-				Toast.success('下载成功')
+				Toast.success(t('qrcode.copied'))
 			}
 
 			img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
@@ -96,14 +98,14 @@ const QRCodeGenerator: React.FC = () => {
 				</div>
 				<div className='flex-1 flex flex-col gap-2'>
 					<TextArea
-						placeholder='请输入名称'
+						placeholder={t('qrcode.input')}
 						value={name}
 						onChange={setName}
 						showClear
 						autosize={{ minRows: 1, maxRows: 1 }}
 					/>
 					<TextArea
-						placeholder='请输入链接'
+						placeholder={t('qrcode.input')}
 						value={url}
 						onChange={setUrl}
 						showClear
@@ -115,20 +117,20 @@ const QRCodeGenerator: React.FC = () => {
 							onClick={handleSave}
 							theme='solid'
 							type='primary'
-							title='保存到历史记录'
+							title={t('qrcode.favorite_add')}
 							className='flex-1'
 						>
-							收藏
+							{t('qrcode.favorite')}
 						</Button>
 						<Button
 							icon={<IconDownload />}
 							onClick={handleDownload}
 							theme='solid'
 							type='primary'
-							title='保存二维码图片'
+							title={t('qrcode.download')}
 							className='flex-1'
 						>
-							保存图片
+							{t('qrcode.download')}
 						</Button>
 					</div>
 				</div>

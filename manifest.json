@@ -2,7 +2,6 @@
   "manifest_version": 3,
   "name": "ez-qrcode",
   "version": "1.0.0",
-  "description": "简单好用的二维码生成和解码工具，支持生成、解码、历史记录等功能",
   "author": "your@email.com",
   "icons": {
     "16": "icons/icon16.png",

@@ -1,0 +1,23 @@
+{
+  "qrcode": {
+    "generate": "Generate QR Code",
+    "decode": "Decode QR Code",
+    "favorite": "Favorite",
+    "input": "Please input content",
+    "generate_btn": "Generate",
+    "decode_btn": "Decode",
+    "download": "Download",
+    "copy": "Copy",
+    "favorite_add": "Update",
+    "favorite_remove": "Remove from Favorite",
+    "upload": "Please upload correct QR code image",
+    "drag": "Drag and drop image here",
+    "or": "or",
+    "click": "click to upload",
+    "no_favorites": "No favorites yet",
+    "copied": "Copied to clipboard",
+    "theme": "Theme",
+    "language": "Language",
+    "filter": "Search by name or link"
+  }
+}

@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { TextArea, Upload, Toast } from '@douyinfe/semi-ui'
 import { IconUpload } from '@douyinfe/semi-icons'
+import { useTranslation } from 'react-i18next'
 import jsQR from 'jsqr'
 
 const QRCodeDecoder: React.FC = () => {
 	const [result, setResult] = useState('')
+	const { t } = useTranslation()
 
 	// 从图片文件解码
 	const decodeFromFile = async (file: File) => {
@@ -18,7 +20,7 @@ const QRCodeDecoder: React.FC = () => {
 			const img = new Image()
 			await new Promise<void>((resolve, reject) => {
 				img.onload = () => resolve()
-				img.onerror = () => reject(new Error('图片加载失败'))
+				img.onerror = () => reject(new Error(t('qrcode.upload')))
 				img.src = objectUrl
 			})
 
@@ -27,9 +29,11 @@ const QRCodeDecoder: React.FC = () => {
 			canvas.width = img.width
 			canvas.height = img.height
 
+			console.log(canvas.width, canvas.height)
+
 			const ctx = canvas.getContext('2d')
 			if (!ctx) {
-				throw new Error('无法创建canvas上下文')
+				throw new Error(t('qrcode.upload'))
 			}
 
 			ctx.drawImage(img, 0, 0)
@@ -44,10 +48,10 @@ const QRCodeDecoder: React.FC = () => {
 			if (code) {
 				setResult(code.data)
 			} else {
-				Toast.error('未能识别二维码')
+				Toast.error(t('qrcode.upload'))
 			}
 		} catch (error) {
-			Toast.error('解码失败')
+			Toast.error(t('qrcode.upload'))
 		}
 	}
 
@@ -61,14 +65,19 @@ const QRCodeDecoder: React.FC = () => {
 					dragIcon={
 						<div className='text-center'>
 							<IconUpload size='extra-large' />
-							<div className='mt-2'>点击或拖拽图片到此处</div>
+						</div>
+					}
+					dragMainText={
+						<div className='mt-2'>
+							{t('qrcode.drag')} {t('qrcode.or')} {t('qrcode.click')}
 						</div>
 					}
 					draggable
 					action=''
 					onError={() => false}
-					onChange={(info) => {
-						const file = info.currentFile.fileInstance
+					onFileChange={(info) => {
+						console.log(info)
+						const file = info[0]
 						if (file) {
 							decodeFromFile(file)
 						}
@@ -77,7 +86,6 @@ const QRCodeDecoder: React.FC = () => {
 			</div>
 
 			<TextArea
-				placeholder='解码结果'
 				value={result}
 				readOnly
 				autosize={{ minRows: 3, maxRows: 6 }}

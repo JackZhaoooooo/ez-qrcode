@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, TabPane, Tabs, Button } from '@douyinfe/semi-ui'
-import { IconMoon, IconSun } from '@douyinfe/semi-icons'
+import { IconMoon, IconSun, IconLanguage } from '@douyinfe/semi-icons'
+import { useTranslation } from 'react-i18next'
 import QRCodeGenerator from './components/QRCodeGenerator'
 import QRCodeDecoder from './components/QRCodeDecoder'
+import './i18n'
 
 type Theme = 'light' | 'dark' | 'system'
+type Language = 'en' | 'zh'
 
 const App: React.FC = () => {
 	const [theme, setTheme] = useState<Theme>('system')
+	const [language, setLanguage] = useState<Language>('zh')
+	const { t, i18n } = useTranslation()
 
 	useEffect(() => {
-		// 从存储中读取主题设置
-		chrome.storage.local.get(['theme'], (result) => {
+		// 从存储中读取主题和语言设置
+		chrome.storage.local.get(['theme', 'language'], (result) => {
 			if (result.theme) {
 				setTheme(result.theme as Theme)
 				document.body.setAttribute('theme-mode', result.theme)
+			}
+			if (result.language) {
+				setLanguage(result.language as Language)
+				i18n.changeLanguage(result.language)
 			}
 		})
 	}, [])
@@ -51,28 +60,45 @@ const App: React.FC = () => {
 		chrome.storage.local.set({ theme: newTheme })
 	}
 
+	const toggleLanguage = () => {
+		const newLanguage = language === 'zh' ? 'en' : 'zh'
+		setLanguage(newLanguage)
+		i18n.changeLanguage(newLanguage)
+		// 保存语言设置到存储
+		chrome.storage.local.set({ language: newLanguage })
+	}
+
 	return (
 		<Layout className='w-full h-full px-3 bg-[var(--semi-color-bg-0)]'>
 			<Tabs
 				type='line'
 				tabBarExtraContent={
-					<Button
-						icon={theme === 'dark' ? <IconSun /> : <IconMoon />}
-						type='tertiary'
-						theme='borderless'
-						size='small'
-						onClick={toggleTheme}
-					/>
+					<div className='flex items-center gap-2 h-full'>
+						<Button
+							icon={<IconLanguage />}
+							type='tertiary'
+							theme='borderless'
+							size='small'
+							onClick={toggleLanguage}
+						/>
+						<Button
+							icon={theme === 'dark' ? <IconSun /> : <IconMoon />}
+							type='tertiary'
+							theme='borderless'
+							size='small'
+							onClick={toggleTheme}
+						/>
+					</div>
 				}
 			>
 				<TabPane
-					tab='生成二维码'
+					tab={t('qrcode.generate')}
 					itemKey='1'
 				>
 					<QRCodeGenerator />
 				</TabPane>
 				<TabPane
-					tab='二维码解码'
+					tab={t('qrcode.decode')}
 					itemKey='2'
 				>
 					<QRCodeDecoder />

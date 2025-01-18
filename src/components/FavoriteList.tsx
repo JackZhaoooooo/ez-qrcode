@@ -17,6 +17,7 @@ import {
 	IconSearch,
 } from '@douyinfe/semi-icons'
 import { QRCodeSVG } from 'qrcode.react'
+import { useTranslation } from 'react-i18next'
 import ReactDOMServer from 'react-dom/server'
 
 interface FavoriteItem {
@@ -32,6 +33,7 @@ const FavoriteList: React.FC = () => {
 	const [editName, setEditName] = useState('')
 	const [editUrl, setEditUrl] = useState('')
 	const [searchText, setSearchText] = useState('')
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		loadFavorites()
@@ -58,7 +60,7 @@ const FavoriteList: React.FC = () => {
 
 	const handleUpdate = () => {
 		if (!currentItem || !editName || !editUrl) {
-			Toast.error('名称和链接不能为空')
+			Toast.error(t('qrcode.input'))
 			return
 		}
 
@@ -71,7 +73,7 @@ const FavoriteList: React.FC = () => {
 		chrome.storage.local.set({ favorites: newFavorites }, () => {
 			setFavorites(newFavorites)
 			setVisible(false)
-			Toast.success('更新成功')
+			Toast.success(t('qrcode.copied'))
 		})
 	}
 
@@ -79,13 +81,13 @@ const FavoriteList: React.FC = () => {
 		const newFavorites = favorites.filter((item) => item.id !== id)
 		chrome.storage.local.set({ favorites: newFavorites }, () => {
 			setFavorites(newFavorites)
-			Toast.success('删除成功')
+			Toast.success(t('qrcode.copied'))
 		})
 	}
 
 	const handleCopy = (url: string) => {
 		navigator.clipboard.writeText(url).then(() => {
-			Toast.success('复制成功')
+			Toast.success(t('qrcode.copied'))
 		})
 	}
 
@@ -122,7 +124,7 @@ const FavoriteList: React.FC = () => {
 				link.click()
 
 				document.body.removeChild(tempDiv)
-				Toast.success('下载成功')
+				Toast.success(t('qrcode.copied'))
 			}
 
 			img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
@@ -170,7 +172,7 @@ const FavoriteList: React.FC = () => {
 							icon={<IconQrCode />}
 							type='tertiary'
 							size='small'
-							title='查看二维码'
+							title={t('qrcode.generate')}
 						/>
 					</Popover>
 					<Button
@@ -178,28 +180,28 @@ const FavoriteList: React.FC = () => {
 						type='tertiary'
 						size='small'
 						onClick={() => handleDownload(record)}
-						title='下载二维码'
+						title={t('qrcode.download')}
 					/>
 					<Button
 						icon={<IconEdit />}
 						type='tertiary'
 						size='small'
 						onClick={() => handleEdit(record)}
-						title='编辑'
+						title={t('qrcode.favorite_add')}
 					/>
 					<Button
 						icon={<IconCopy />}
 						type='tertiary'
 						size='small'
 						onClick={() => handleCopy(record.url)}
-						title='复制链接'
+						title={t('qrcode.copy')}
 					/>
 					<Button
 						icon={<IconDelete />}
 						type='tertiary'
 						size='small'
 						onClick={() => handleDelete(record.id)}
-						title='删除'
+						title={t('qrcode.favorite_remove')}
 					/>
 				</div>
 			),
@@ -211,7 +213,7 @@ const FavoriteList: React.FC = () => {
 			<div className='mb-1'>
 				<Input
 					prefix={<IconSearch />}
-					placeholder='搜索名称或链接'
+					placeholder={t('qrcode.filter')}
 					value={searchText}
 					onChange={setSearchText}
 					showClear
@@ -224,10 +226,10 @@ const FavoriteList: React.FC = () => {
 				pagination={false}
 				size='small'
 				className='h-[200px] overflow-y-auto'
-				empty='暂无历史记录'
+				empty={t('qrcode.no_favorites')}
 			/>
 			<SideSheet
-				title='编辑二维码'
+				title={t('qrcode.favorite_add')}
 				visible={visible}
 				onCancel={() => setVisible(false)}
 				width={400}
@@ -235,25 +237,25 @@ const FavoriteList: React.FC = () => {
 			>
 				<div className='flex flex-col gap-2 p-4'>
 					<TextArea
-						placeholder='请输入名称'
+						placeholder={t('qrcode.input')}
 						value={editName}
 						onChange={setEditName}
 						showClear
 						autosize={{ minRows: 1, maxRows: 1 }}
 					/>
 					<TextArea
-						placeholder='请输入链接'
+						placeholder={t('qrcode.input')}
 						value={editUrl}
 						onChange={setEditUrl}
 						showClear
 						autosize={{ minRows: 5, maxRows: 5 }}
 					/>
 					<Button
-						type='primary'
 						theme='solid'
+						type='primary'
 						onClick={handleUpdate}
 					>
-						更新
+						{t('qrcode.favorite_add')}
 					</Button>
 				</div>
 			</SideSheet>
