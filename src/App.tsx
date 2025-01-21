@@ -138,7 +138,6 @@ const App: React.FC = () => {
 		<Layout className='w-full bg-[var(--semi-color-bg-0)] px-[7px]'>
 			<Tabs
 				type='line'
-				className='py-1'
 				activeKey={activeTab}
 				onChange={handleTabChange}
 				tabBarExtraContent={

@@ -10,6 +10,7 @@
     "copy": "复制",
     "favorite_add": "更新",
     "favorite_remove": "从收藏中移除",
+    "favorite_toast": "收藏成功",
     "upload": "请上传正确二维码图片",
     "drag": "拖拽图片到这里",
     "or": "或",

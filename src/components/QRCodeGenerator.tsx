@@ -98,7 +98,6 @@ const QRCodeGenerator: React.FC = () => {
 				},
 				() => {
 					setRefreshKey((prev) => prev + 1)
-					Toast.success(t('qrcode.copied'))
 				},
 			)
 		})
@@ -149,7 +148,7 @@ const QRCodeGenerator: React.FC = () => {
 	}
 
 	return (
-		<div className='flex flex-col h-full py-1'>
+		<div className='flex flex-col h-full'>
 			<div className='flex gap-2 mb-2'>
 				<div className='w-[191px] flex items-center justify-center bg-gray-50 rounded-lg'>
 					<QRCodeSVG

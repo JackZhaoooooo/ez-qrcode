@@ -124,7 +124,6 @@ const FavoriteList: React.FC = () => {
 				link.click()
 
 				document.body.removeChild(tempDiv)
-				Toast.success(t('qrcode.copied'))
 			}
 
 			img.src = 'data:image/svg+xml;base64,' + btoa(svgData)

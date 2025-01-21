@@ -68,7 +68,7 @@ html[data-popup] #root {
   html:not([data-popup]) .semi-tabs {
     width: 540px;
     margin: 0 auto;
-    padding: 7px;
+    padding: 0 7px;
     background-color: var(--semi-color-bg-1);
     border-radius: 8px;
     box-shadow: var(--semi-shadow-elevated);

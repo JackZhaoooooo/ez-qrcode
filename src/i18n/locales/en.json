@@ -10,6 +10,7 @@
     "copy": "Copy",
     "favorite_add": "Update",
     "favorite_remove": "Remove from Favorite",
+    "favorite_toast": "Favorite successfully",
     "upload": "Please upload correct QR code image",
     "drag": "Drag and drop image here",
     "or": "or",
@@ -18,6 +19,7 @@
     "copied": "Copied to clipboard",
     "theme": "Theme",
     "language": "Language",
-    "filter": "Search by name or link"
+    "filter": "Search by name or link",
+    "delete_success": "Delete successfully"
   }
 }
