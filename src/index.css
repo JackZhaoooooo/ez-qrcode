@@ -21,10 +21,62 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--semi-color-bg-0);
 }
 
 #root {
+  width: 100%;
+  background-color: var(--semi-color-bg-0);
+}
+
+html[data-popup] #root {
   width: 540px;
+}
+
+/* 全屏页面样式 */
+@media screen and (min-width: 768px) {
+  html:not([data-popup]) {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  html:not([data-popup]) body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  html:not([data-popup]) #root {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  html:not([data-popup]) .semi-layout {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  html:not([data-popup]) .semi-tabs {
+    width: 540px;
+    margin: 0 auto;
+    padding: 7px;
+    background-color: var(--semi-color-bg-1);
+    border-radius: 8px;
+    box-shadow: var(--semi-shadow-elevated);
+  }
+
+  html:not([data-popup]) .semi-tabs-content {
+    margin: 0 auto;
+  }
 }
 
 /* 滚动条样式 */

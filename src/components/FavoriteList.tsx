@@ -81,7 +81,7 @@ const FavoriteList: React.FC = () => {
 		const newFavorites = favorites.filter((item) => item.id !== id)
 		chrome.storage.local.set({ favorites: newFavorites }, () => {
 			setFavorites(newFavorites)
-			Toast.success(t('qrcode.copied'))
+			Toast.success(t('qrcode.delete_success'))
 		})
 	}
 
