@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextArea, Upload, Toast } from '@douyinfe/semi-ui'
 import { IconUpload } from '@douyinfe/semi-icons'
 import { useTranslation } from 'react-i18next'
@@ -8,9 +8,35 @@ const QRCodeDecoder: React.FC = () => {
 	const [result, setResult] = useState('')
 	const { t } = useTranslation()
 
+	// 监听存储变化
+	useEffect(() => {
+		const handleStorageChange = (changes: {
+			[key: string]: chrome.storage.StorageChange
+		}) => {
+			if (changes.decodedResult) {
+				setResult(changes.decodedResult.newValue || '')
+			}
+		}
+
+		chrome.storage.onChanged.addListener(handleStorageChange)
+		return () => {
+			chrome.storage.onChanged.removeListener(handleStorageChange)
+		}
+	}, [])
+
+	// 初始化时从存储中读取解码结果
+	useEffect(() => {
+		chrome.storage.local.get(['decodedResult'], (result) => {
+			if (result.decodedResult) {
+				setResult(result.decodedResult)
+			}
+		})
+	}, [])
+
 	// 从图片文件解码
 	const decodeFromFile = async (file: File) => {
 		setResult('')
+		chrome.storage.local.set({ decodedResult: '' })
 
 		try {
 			// 创建文件的临时URL
@@ -47,6 +73,7 @@ const QRCodeDecoder: React.FC = () => {
 
 			if (code) {
 				setResult(code.data)
+				chrome.storage.local.set({ decodedResult: code.data })
 			} else {
 				Toast.error(t('qrcode.upload'))
 			}

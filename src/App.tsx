@@ -14,14 +14,47 @@ import './i18n'
 type Theme = 'light' | 'dark' | 'system'
 type Language = 'en' | 'zh'
 
+// 定义消息类型
+type MessageType = {
+	type: 'themeChange' | 'languageChange' | 'tabChange'
+	data: any
+}
+
 const App: React.FC = () => {
 	const [theme, setTheme] = useState<Theme>('system')
 	const [language, setLanguage] = useState<Language>('zh')
+	const [activeTab, setActiveTab] = useState('1')
 	const { t, i18n } = useTranslation()
 
+	// 监听来自其他页面的消息
 	useEffect(() => {
-		// 从存储中读取主题和语言设置
-		chrome.storage.local.get(['theme', 'language'], (result) => {
+		const handleStorageChange = (changes: {
+			[key: string]: chrome.storage.StorageChange
+		}) => {
+			if (changes.theme) {
+				const newTheme = changes.theme.newValue as Theme
+				setTheme(newTheme)
+				document.body.setAttribute('theme-mode', newTheme)
+			}
+			if (changes.language) {
+				const newLanguage = changes.language.newValue as Language
+				setLanguage(newLanguage)
+				i18n.changeLanguage(newLanguage)
+			}
+			if (changes.activeTab) {
+				setActiveTab(changes.activeTab.newValue)
+			}
+		}
+
+		chrome.storage.onChanged.addListener(handleStorageChange)
+		return () => {
+			chrome.storage.onChanged.removeListener(handleStorageChange)
+		}
+	}, [])
+
+	useEffect(() => {
+		// 从存储中读取主题、语言和当前标签页设置
+		chrome.storage.local.get(['theme', 'language', 'activeTab'], (result) => {
 			if (result.theme) {
 				setTheme(result.theme as Theme)
 				document.body.setAttribute('theme-mode', result.theme)
@@ -29,6 +62,9 @@ const App: React.FC = () => {
 			if (result.language) {
 				setLanguage(result.language as Language)
 				i18n.changeLanguage(result.language)
+			}
+			if (result.activeTab) {
+				setActiveTab(result.activeTab)
 			}
 		})
 	}, [])
@@ -92,11 +128,19 @@ const App: React.FC = () => {
 		})
 	}
 
+	const handleTabChange = (key: string) => {
+		setActiveTab(key)
+		// 保存当前标签页到存储
+		chrome.storage.local.set({ activeTab: key })
+	}
+
 	return (
 		<Layout className='w-full bg-[var(--semi-color-bg-0)] px-[7px]'>
 			<Tabs
 				type='line'
 				className='py-1'
+				activeKey={activeTab}
+				onChange={handleTabChange}
 				tabBarExtraContent={
 					<div className='flex items-center gap-2 h-full'>
 						<Button

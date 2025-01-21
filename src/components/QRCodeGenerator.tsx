@@ -10,16 +10,78 @@ const QRCodeGenerator: React.FC = () => {
 	const [name, setName] = useState('')
 	const [url, setUrl] = useState('')
 	const [refreshKey, setRefreshKey] = useState(0)
+	const [isPopup, setIsPopup] = useState(true)
 	const { t } = useTranslation()
 
+	// 检查是否是弹出窗口
 	useEffect(() => {
-		// 获取当前页面的标题和URL
-		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-			const currentTab = tabs[0]
-			setName(currentTab.title || '')
-			setUrl(currentTab.url || '')
-		})
+		setIsPopup(document.documentElement.hasAttribute('data-popup'))
 	}, [])
+
+	// 监听存储变化
+	useEffect(() => {
+		const handleStorageChange = (changes: {
+			[key: string]: chrome.storage.StorageChange
+		}) => {
+			// 只有在全屏模式下才同步 currentQRCode
+			if (!isPopup && changes.currentQRCode) {
+				const { name: newName, url: newUrl } =
+					changes.currentQRCode.newValue || {}
+				setName(newName || '')
+				setUrl(newUrl || '')
+			}
+			if (changes.favorites) {
+				setRefreshKey((prev) => prev + 1)
+			}
+		}
+
+		chrome.storage.onChanged.addListener(handleStorageChange)
+		return () => {
+			chrome.storage.onChanged.removeListener(handleStorageChange)
+		}
+	}, [isPopup])
+
+	useEffect(() => {
+		if (isPopup) {
+			// 在弹出窗口模式下，使用 activeTab 权限获取当前标签页信息
+			chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+				const currentTab = tabs[0]
+				if (currentTab) {
+					setName(currentTab.title || '')
+					setUrl(currentTab.url || '')
+				}
+			})
+		} else {
+			// 在全屏模式下，从存储中读取数据
+			chrome.storage.local.get(['currentQRCode'], (result) => {
+				if (result.currentQRCode) {
+					setName(result.currentQRCode.name)
+					setUrl(result.currentQRCode.url)
+				}
+			})
+		}
+	}, [isPopup])
+
+	// 更新输入内容时同步到存储
+	const handleNameChange = (value: string) => {
+		setName(value)
+		// 只有在全屏模式下才同步到存储
+		if (!isPopup) {
+			chrome.storage.local.set({
+				currentQRCode: { name: value, url },
+			})
+		}
+	}
+
+	const handleUrlChange = (value: string) => {
+		setUrl(value)
+		// 只有在全屏模式下才同步到存储
+		if (!isPopup) {
+			chrome.storage.local.set({
+				currentQRCode: { name, url: value },
+			})
+		}
+	}
 
 	const handleSave = () => {
 		if (!name || !url) {
@@ -99,14 +161,14 @@ const QRCodeGenerator: React.FC = () => {
 					<TextArea
 						placeholder={t('qrcode.input')}
 						value={name}
-						onChange={setName}
+						onChange={handleNameChange}
 						showClear
 						autosize={{ minRows: 1, maxRows: 1 }}
 					/>
 					<TextArea
 						placeholder={t('qrcode.input')}
 						value={url}
-						onChange={setUrl}
+						onChange={handleUrlChange}
 						showClear
 						autosize={{ minRows: 5, maxRows: 5 }}
 					/>
