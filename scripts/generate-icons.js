@@ -22,12 +22,22 @@ async function generateIcons() {
 		// 为每个尺寸生成PNG
 		await Promise.all(
 			sizes.map(async (size) => {
-				await sharp(svgBuffer)
-					.resize(size, size)
-					.png()
-					.toFile(join(rootDir, `icons/icon${size}.png`))
+				try {
+					await sharp(svgBuffer, {
+						density: 300,  // 提高SVG渲染质量
+					})
+						.resize(size, size, {
+							fit: 'contain',
+							background: { r: 255, g: 255, b: 255, alpha: 1 }  // 白色背景
+						})
+						.png()
+						.toFile(join(rootDir, `icons/icon${size}.png`))
 
-				console.log(`✓ Generated ${size}x${size} icon`)
+					console.log(`✓ Generated ${size}x${size} icon`)
+				} catch (err) {
+					console.error(`Failed to generate ${size}x${size} icon:`, err)
+					throw err
+				}
 			}),
 		)
 

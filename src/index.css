@@ -1,6 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, semi, tailwind-components, tailwind-utils;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-components {
+  @tailwind components;
+}
+
+@layer tailwind-utils {
+  @tailwind utilities;
+}
 * {
   box-sizing: border-box;
 }
