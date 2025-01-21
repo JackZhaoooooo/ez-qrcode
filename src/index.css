@@ -153,3 +153,7 @@ html[data-popup] #root {
 [theme-mode="dark"] .semi-table-tbody .semi-table-td {
   border-bottom-color: var(--semi-color-border) !important;
 }
+
+html:not([data-popup]) .main-tabs > .semi-tabs-content {
+  background-color: transparent;
+}

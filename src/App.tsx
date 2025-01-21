@@ -140,6 +140,7 @@ const App: React.FC = () => {
 				type='line'
 				activeKey={activeTab}
 				onChange={handleTabChange}
+				className='main-tabs'
 				tabBarExtraContent={
 					<div className='flex items-center gap-2 h-full'>
 						<Button
@@ -167,12 +168,14 @@ const App: React.FC = () => {
 				}
 			>
 				<TabPane
+					className='main-tabs-1'
 					tab={t('qrcode.generate')}
 					itemKey='1'
 				>
 					<QRCodeGenerator />
 				</TabPane>
 				<TabPane
+					className='main-tabs-2'
 					tab={t('qrcode.decode')}
 					itemKey='2'
 				>
