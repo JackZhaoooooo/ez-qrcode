@@ -30,6 +30,13 @@ const QRCodeGenerator: React.FC = () => {
 				setName(newName || '')
 				setUrl(newUrl || '')
 			}
+			// 在非全屏模式下同步 popupQRCode
+			if (isPopup && changes.popupQRCode) {
+				const { name: newName, url: newUrl } =
+					changes.popupQRCode.newValue || {}
+				setName(newName || '')
+				setUrl(newUrl || '')
+			}
 			if (changes.favorites) {
 				setRefreshKey((prev) => prev + 1)
 			}
@@ -44,12 +51,19 @@ const QRCodeGenerator: React.FC = () => {
 	useEffect(() => {
 		if (isPopup) {
 			// 在弹出窗口模式下，使用 activeTab 权限获取当前标签页信息
-			chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+			chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 				const currentTab = tabs[0]
-				if (currentTab) {
-					setName(currentTab.title || '')
-					setUrl(currentTab.url || '')
-				}
+				// 先检查是否有置顶的数据
+				chrome.storage.local.get(['popupQRCode'], (result) => {
+					if (currentTab?.url && !currentTab.url.startsWith('chrome://')) {
+						// 只有当标签页存在且不是 chrome:// 页面时才设置
+						setName(currentTab.title || '')
+						setUrl(currentTab.url || '')
+					} else if (result.popupQRCode) {
+						setName(result.popupQRCode.name)
+						setUrl(result.popupQRCode.url)
+					}
+				})
 			})
 		} else {
 			// 在全屏模式下，从存储中读取数据

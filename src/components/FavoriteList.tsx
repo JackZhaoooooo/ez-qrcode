@@ -15,6 +15,7 @@ import {
 	IconCopy,
 	IconDelete,
 	IconSearch,
+	IconTop,
 } from '@douyinfe/semi-icons'
 import { QRCodeSVG } from 'qrcode.react'
 import { useTranslation } from 'react-i18next'
@@ -33,10 +34,12 @@ const FavoriteList: React.FC = () => {
 	const [editName, setEditName] = useState('')
 	const [editUrl, setEditUrl] = useState('')
 	const [searchText, setSearchText] = useState('')
+	const [isPopup, setIsPopup] = useState(true)
 	const { t } = useTranslation()
 
 	useEffect(() => {
 		loadFavorites()
+		setIsPopup(document.documentElement.hasAttribute('data-popup'))
 	}, [])
 
 	const loadFavorites = () => {
@@ -130,6 +133,24 @@ const FavoriteList: React.FC = () => {
 		}
 	}
 
+	const handlePin = (item: FavoriteItem) => {
+		if (isPopup) {
+			chrome.storage.local.set(
+				{
+					popupQRCode: { name: item.name, url: item.url },
+				},
+				() => {},
+			)
+		} else {
+			chrome.storage.local.set(
+				{
+					currentQRCode: { name: item.name, url: item.url },
+				},
+				() => {},
+			)
+		}
+	}
+
 	const columns = [
 		{
 			dataIndex: 'name',
@@ -152,6 +173,13 @@ const FavoriteList: React.FC = () => {
 			dataIndex: 'operation',
 			render: (_: any, record: FavoriteItem) => (
 				<div className='flex gap-1 justify-end'>
+					<Button
+						icon={<IconTop />}
+						type='tertiary'
+						size='small'
+						onClick={() => handlePin(record)}
+						title={t('qrcode.pin')}
+					/>
 					<Popover
 						content={
 							<div
