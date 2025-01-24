@@ -22,6 +22,7 @@
     "filter": "输入名称或链接进行搜索",
     "delete_success": "删除成功",
     "pin": "置顶到生成器",
-    "pin_success": "置顶成功"
+    "pin_success": "置顶成功",
+    "update_success": "更新成功"
   }
 }

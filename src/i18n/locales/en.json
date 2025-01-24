@@ -22,6 +22,7 @@
     "filter": "Search by name or link",
     "delete_success": "Deleted successfully",
     "pin": "Pin to generator",
-    "pin_success": "Pinned successfully"
+    "pin_success": "Pinned successfully",
+    "update_success": "Updated successfully"
   }
 }
